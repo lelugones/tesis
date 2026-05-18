@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExtractorOutputPayload",
+  "type": "OBJECT",
+  "properties": {
+    "df_persona": {
+      "type": "ARRAY",
+      "items": {
+        "type": "OBJECT",
+        "properties": {
+          "id": { "type": "INTEGER" },
+          "nombre": { "type": "STRING" },
+          "ingresos_estimados": { "type": "NUMBER" },
+          "fecha_modificacion": { "type": "STRING", "format": "date-time" },
+          "municipio_id": { "type": "INTEGER" }
+        },
+        "required": ["id", "nombre", "ingresos_estimados", "fecha_modificacion", "municipio_id"]
+      }
+    },
+    "df_familia": {
+      "type": "ARRAY",
+      "items": {
+        "type": "OBJECT",
+        "properties": {
+          "id": { "type": "INTEGER" },
+          "indice_vulnera": { "type": "NUMBER" },
+          "fecha_modificacion": { "type": "STRING", "format": "date-time" }
+        },
+        "required": ["id", "indice_vulnera", "fecha_modificacion"]
+      }
+    },
+    "df_tarjeta": {
+      "type": "ARRAY",
+      "items": {
+        "type": "OBJECT",
+        "properties": {
+          "id": { "type": "INTEGER" },
+          "persona_id": { "type": "INTEGER" },
+          "activa": { "type": "BOOLEAN" },
+          "monto_asignado": { "type": "NUMBER" },
+          "fecha_modificacion": { "type": "STRING", "format": "date-time" }
+        },
+        "required": ["id", "persona_id", "activa", "monto_asignado", "fecha_modificacion"]
+      }
+    }
+  },
+  "required": ["df_persona", "df_familia", "df_tarjeta"]
+}
