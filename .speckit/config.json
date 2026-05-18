@@ -1,0 +1,58 @@
+{
+  "project_name": "Sistema de Agentes Inteligentes para la Automatización de la implementación de un Data Mart con Metodología Hefesto en la Secretaría de Políticas Alimentarias",
+  "acronym": "TAIS_DM",
+  "version": "1.0.0",
+  "metadata": {
+    "type": "Trabajo Final Integrador (TFI)",
+    "program": "Maestría en Ciencia de Datos",
+    "domain": "Políticas Alimentarias y Desarrollo Social - Municipios de Salta",
+    "context": "Secretaría de Políticas Alimentarias",
+    "methodology": "Hefesto (Modelado Multidimensional de Data Marts)"
+  },
+  "spec_kit": {
+    "specs_path": "specs/",
+    "templates_path": ".speckit/templates/",
+    "config_path": ".speckit/",
+    "active_constitution": ".specify/memory/constitution.md"
+  },
+  "source_code": {
+    "language": "python",
+    "version": ">=3.10",
+    "root_dir": "src/",
+    "modules": {
+      "coordinador": "src/agents/coordinador/",
+      "extractor": "src/agents/extractor/",
+      "transformador": "src/agents/transformador/",
+      "cargador": "src/agents/cargador/",
+      "drivers": "src/drivers/"
+    }
+  },
+  "testing": {
+    "runner": "pytest",
+    "test_dir": "tests/",
+    "min_coverage_percent": 90,
+    "categories": [
+      "unit",
+      "integration",
+      "contract"
+    ]
+  },
+  "data_mart": {
+    "dimensions": [
+      "dimBeneficiarios",
+      "dimProgramas",
+      "dimTiempo",
+      "dimGeografia"
+    ],
+    "fact_tables": [
+      "factPolíticasAlimentarias"
+    ],
+    "metrics": [
+      "admPersonas",
+      "efiProgramas",
+      "vulneraSocial",
+      "participaMunicipal",
+      "usoTarjetas"
+    ]
+  }
+}
