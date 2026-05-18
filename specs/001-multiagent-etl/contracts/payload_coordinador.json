@@ -1,26 +1,26 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "CoordinadorControlPayload",
-  "type": "OBJECT",
+  "type": "object",
   "properties": {
     "batch_id": {
-      "type": "STRING",
+      "type": "string",
       "format": "uuid"
     },
     "execution_mode": {
-      "type": "STRING",
+      "type": "string",
       "enum": ["incremental", "full"]
     },
     "target_period_start": {
-      "type": "STRING",
+      "type": "string",
       "format": "date-time"
     },
     "target_period_end": {
-      "type": "STRING",
+      "type": "string",
       "format": "date-time"
     },
     "force_execution": {
-      "type": "BOOLEAN"
+      "type": "boolean"
     }
   },
   "required": ["batch_id", "execution_mode", "target_period_start", "target_period_end", "force_execution"]

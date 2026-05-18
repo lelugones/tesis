@@ -1,48 +1,48 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "CargadorInputPayload",
-  "type": "OBJECT",
+  "type": "object",
   "properties": {
     "df_dimBeneficiarios": {
-      "type": "ARRAY",
+      "type": "array",
       "items": {
-        "type": "OBJECT",
+        "type": "object",
         "properties": {
-          "id_persona_oltp": { "type": "INTEGER" },
-          "nombre_completo": { "type": "STRING" },
-          "grupo_etario": { "type": "STRING", "enum": ["Niño", "Adulto", "Mayor"] },
-          "tarjeta_activa": { "type": "BOOLEAN" },
-          "ingresos_estimados": { "type": "NUMBER" }
+          "id_persona_oltp": { "type": "integer" },
+          "nombre_completo": { "type": "string" },
+          "grupo_etario": { "type": "string", "enum": ["Niño", "Adulto", "Mayor"] },
+          "tarjeta_activa": { "type": "boolean" },
+          "ingresos_estimados": { "type": "number" }
         },
         "required": ["id_persona_oltp", "nombre_completo", "grupo_etario", "tarjeta_activa", "ingresos_estimados"]
       }
     },
     "df_dimProgramas": {
-      "type": "ARRAY",
+      "type": "array",
       "items": {
-        "type": "OBJECT",
+        "type": "object",
         "properties": {
-          "id_programa_oltp": { "type": "INTEGER" },
-          "nombre_programa": { "type": "STRING" },
-          "estado": { "type": "STRING" }
+          "id_programa_oltp": { "type": "integer" },
+          "nombre_programa": { "type": "string" },
+          "estado": { "type": "string" }
         },
         "required": ["id_programa_oltp", "nombre_programa", "estado"]
       }
     },
     "df_factPolíticasAlimentarias": {
-      "type": "ARRAY",
+      "type": "array",
       "items": {
-        "type": "OBJECT",
+        "type": "object",
         "properties": {
-          "id_persona_oltp": { "type": "INTEGER" },
-          "id_programa_oltp": { "type": "INTEGER" },
-          "id_municipio_oltp": { "type": "INTEGER" },
-          "fecha_transaccion": { "type": "STRING", "format": "date-time" },
-          "admPersonas": { "type": "INTEGER" },
-          "efiProgramas": { "type": "NUMBER" },
-          "vulneraSocial": { "type": "NUMBER", "minimum": 0.0, "maximum": 1.0 },
-          "participaMunicipal": { "type": "NUMBER" },
-          "usoTarjetas": { "type": "NUMBER" }
+          "id_persona_oltp": { "type": "integer" },
+          "id_programa_oltp": { "type": "integer" },
+          "id_municipio_oltp": { "type": "integer" },
+          "fecha_transaccion": { "type": "string", "format": "date-time" },
+          "admPersonas": { "type": "integer" },
+          "efiProgramas": { "type": "number" },
+          "vulneraSocial": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+          "participaMunicipal": { "type": "number" },
+          "usoTarjetas": { "type": "number" }
         },
         "required": [
           "id_persona_oltp",

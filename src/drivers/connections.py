@@ -10,7 +10,7 @@ class DBConnectionManager:
     Defaults to SQLite in-memory for development and TDD testing environments.
     """
     
-    def __init__(self, oltp_url: str = None, olap_url: str = None):
+    def __init__(self, oltp_url: str | None = None, olap_url: str | None = None):
         # Resolve OLTP connection string
         self.oltp_url = oltp_url or os.environ.get(
             "OLTP_DB_CONN",

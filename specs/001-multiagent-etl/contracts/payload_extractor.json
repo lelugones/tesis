@@ -1,44 +1,44 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ExtractorOutputPayload",
-  "type": "OBJECT",
+  "type": "object",
   "properties": {
     "df_persona": {
-      "type": "ARRAY",
+      "type": "array",
       "items": {
-        "type": "OBJECT",
+        "type": "object",
         "properties": {
-          "id": { "type": "INTEGER" },
-          "nombre": { "type": "STRING" },
-          "ingresos_estimados": { "type": "NUMBER" },
-          "fecha_modificacion": { "type": "STRING", "format": "date-time" },
-          "municipio_id": { "type": "INTEGER" }
+          "id": { "type": "integer" },
+          "nombre": { "type": "string" },
+          "ingresos_estimados": { "type": "number" },
+          "fecha_modificacion": { "type": "string", "format": "date-time" },
+          "municipio_id": { "type": "integer" }
         },
         "required": ["id", "nombre", "ingresos_estimados", "fecha_modificacion", "municipio_id"]
       }
     },
     "df_familia": {
-      "type": "ARRAY",
+      "type": "array",
       "items": {
-        "type": "OBJECT",
+        "type": "object",
         "properties": {
-          "id": { "type": "INTEGER" },
-          "indice_vulnera": { "type": "NUMBER" },
-          "fecha_modificacion": { "type": "STRING", "format": "date-time" }
+          "id": { "type": "integer" },
+          "indice_vulnera": { "type": "number" },
+          "fecha_modificacion": { "type": "string", "format": "date-time" }
         },
         "required": ["id", "indice_vulnera", "fecha_modificacion"]
       }
     },
     "df_tarjeta": {
-      "type": "ARRAY",
+      "type": "array",
       "items": {
-        "type": "OBJECT",
+        "type": "object",
         "properties": {
-          "id": { "type": "INTEGER" },
-          "persona_id": { "type": "INTEGER" },
-          "activa": { "type": "BOOLEAN" },
-          "monto_asignado": { "type": "NUMBER" },
-          "fecha_modificacion": { "type": "STRING", "format": "date-time" }
+          "id": { "type": "integer" },
+          "persona_id": { "type": "integer" },
+          "activa": { "type": "boolean" },
+          "monto_asignado": { "type": "number" },
+          "fecha_modificacion": { "type": "string", "format": "date-time" }
         },
         "required": ["id", "persona_id", "activa", "monto_asignado", "fecha_modificacion"]
       }
