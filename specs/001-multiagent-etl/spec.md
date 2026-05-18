@@ -7,6 +7,15 @@
 
 ---
 
+## Clarifications
+
+### Session 2026-05-18
+- Q: ¿Cuáles de los siguientes aspectos quedan explícitamente fuera del alcance para la primera versión del pipeline? → A: Ambos (Streaming y sincronización bidireccional) quedan fuera de alcance; la carga es estrictamente unidireccional y por lotes periódicos.
+- Q: ¿Cómo debe manejar el Extractor el control de carga sobre la base transaccional de origen? → A: Extracción paginada en lotes de tamaño parametrizable (por defecto 5,000 filas) con pausas breves (e.g., 500 ms) entre lotes para mitigar la sobrecarga en el motor OLTP.
+- Q: ¿Qué política de curación y alerta debe seguir el Transformador cuando encuentre un registro geográfico inválido (fuera de Salta)? → A: Aislamiento y Continuidad: desviar registros huérfanos/fuera de Salta a la tabla `curacion_geografica` en el Data Mart, registrar un aviso estructurado en el log de auditoría y continuar el procesamiento del lote.
+
+---
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Carga Incremental Automatizada y Consistente (Priority: P1)
@@ -94,11 +103,12 @@ El Extractor realiza la extracción incremental bajo el siguiente flujo algorít
 2. **Consulta Incremental**: Ejecuta consultas SQL parametrizadas filtrando por el campo `fecha_modificacion` en las tablas: `Persona`, `Familia`, `Municipio`, `Novedad`, `Satisfaccion`, `Transaccion` y `Tarjeta`.
 3. **Mapeo Tipado**: Convierte de forma segura los tipos de datos nativos de SQL Server a Python/Pandas sin pérdida de precisión decimal en campos de tipo `money` (evitando redondeos de punto flotante).
 4. **Validación Inicial**: Valida la completitud del esquema crudo. En caso de inconsistencias críticas en el origen (ej. campos de ID nulos), descarta el registro erróneo y lo registra en un archivo de logs locales.
+5. **Control de Carga (Throttling)**: La extracción debe realizarse de forma paginada en lotes de tamaño parametrizable (por defecto 5,000 filas por consulta) introduciendo pausas controladas de 500 ms entre lotes para mitigar la sobrecarga en el motor OLTP durante horas de alta concurrencia.
 
 ### 3. Criterios de Aceptación Ejecutables (Spec Kit Asserts)
 - **ASSERT-EXT-01**: Las columnas que contienen valores de tipo `money` o `decimal` en SQL Server deben ser cargadas en el DataFrame como instancias de `decimal.Decimal`.
 - **ASSERT-EXT-02**: El filtro temporal de extracción incremental debe asegurar que ningún registro con fecha de modificación inferior a `target_period_start` sea retornado.
-- **ASSERT-EXT-03**: La extracción debe lanzarse de forma asíncrona por tabla y soportar la lectura de lotes (chunks) si el volumen supera los 10,000 registros para evitar el agotamiento de memoria.
+- **ASSERT-EXT-03**: La extracción debe lanzarse de forma paginada por tabla en lotes de hasta 5,000 registros, verificando que se introduzcan pausas de 500 ms entre lotes para controlar el throttling en el servidor OLTP.
 
 ---
 
@@ -121,11 +131,11 @@ El Transformador implementa la lógica multidimensional y ejecuta cálculos anal
    - **vulneraSocial**: Ponderación multidimensional basada en ingresos familiares, tamaño familiar y condiciones sanitarias. El índice de vulnerabilidad debe normalizarse estrictamente en el intervalo `[0.00, 1.00]`.
    - **participaMunicipal**: Nivel de integración municipal de programas alimentarios calculada con `sp_CalcularCrecimientoMunicipal`.
    - **usoTarjetas**: Cantidad total transaccionada de subsidio mediante tarjetas activas e inactivas.
-3. **Mapeo Dimensional de Geografía**: Limita y valida que la geografía corresponda estrictamente a los Municipios y Localidades de la Provincia de Salta (ej. Tartagal, Orán, Rivadavia). Cualquier registro fuera de la provincia debe ser derivado a la tabla de exclusión `curacion_geografica`.
+3. **Mapeo Dimensional de Geografía**: Limita y valida que la geografía corresponda estrictamente a los Municipios y Localidades de la Provincia de Salta (ej. Tartagal, Orán, Rivadavia). Cualquier registro fuera de la provincia debe ser derivado a la tabla de exclusión `curacion_geografica` (política de Aislamiento y Continuidad), registrando un Warning estructurado en los logs de auditoría sin interrumpir el procesamiento del lote.
 
 ### 3. Criterios de Aceptación Ejecutables (Spec Kit Asserts)
 - **ASSERT-TRANS-01**: El índice `vulneraSocial` debe validarse en cada registro y arrojar error si su valor es menor que 0.00 o mayor que 1.00.
-- **ASSERT-TRANS-02**: Toda fila con datos de geografía que no pertenezca a los municipios declarados de Salta debe ser filtrada y no debe llegar al DataFrame de hechos.
+- **ASSERT-TRANS-02**: Toda fila con datos de geografía fuera de Salta debe ser filtrada del flujo principal, guardarse en `curacion_geografica` y registrar un Warning estructurado en el log de auditoría, sin abortar la ejecución del lote.
 - **ASSERT-TRANS-03**: La métrica `efiProgramas` debe contener valores calculados dinámicamente llamando a los Stored Procedures correspondientes para cada programa en el lote.
 
 ---
@@ -159,6 +169,7 @@ El Cargador aplica un flujo secuencial estricto y atómico de persistencia bajo 
 - **FR-003**: El sistema MUST invocar las funciones analíticas del origen transaccional (`sp_CalcularCrecimientoMunicipal`, `sp_NivelSatisfaccionPromedio`, etc.) mediante consultas tipadas.
 - **FR-004**: Toda carga de datos MUST ser atómica a nivel de lote: o se guarda todo (Dimensiones y Hechos del lote) o no se guarda nada (Rollback total).
 - **FR-005**: Las métricas de geografía y distribución de políticas alimentarias MUST limitarse de manera estricta a los Municipios y Localidades de la Provincia de Salta.
+- **FR-006**: El pipeline MUST operar de forma estrictamente unidireccional (OLTP -> OLAP) y por lotes periódicos (batch), quedando fuera de alcance cualquier sincronización en tiempo real (streaming) o bidireccional.
 
 ### Key Entities
 - **dimBeneficiarios**: Representa el padrón único de personas y familias vulnerables con atributos socioeconómicos de origen.
