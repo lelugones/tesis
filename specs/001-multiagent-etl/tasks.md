@@ -22,9 +22,9 @@
 
 **Purpose**: Project directory initialization and base configuration.
 
-- [ ] T001 Initialize the project structure creating folders: `src/agents/coordinador`, `src/agents/extractor`, `src/agents/transformador`, `src/agents/cargador`, `src/drivers` and `tests/unit`, `tests/integration`, `tests/contract` per plan.md.
-- [ ] T002 Configure Python virtual environment, project requirements and verify Pytest dependencies inside root `requirements.txt`.
-- [ ] T003 [P] Setup linting, formatting (e.g., black/flake8) and config files (`pyproject.toml` or `setup.cfg`).
+- [x] T001 Initialize the project structure creating folders: `src/agents/coordinador`, `src/agents/extractor`, `src/agents/transformador`, `src/agents/cargador`, `src/drivers` and `tests/unit`, `tests/integration`, `tests/contract` per plan.md.
+- [x] T002 Configure Python virtual environment, project requirements and verify Pytest dependencies inside root `requirements.txt`.
+- [x] T003 [P] Setup linting, formatting (e.g., black/flake8) and config files (`pyproject.toml` or `setup.cfg`).
 
 ---
 
@@ -34,10 +34,10 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T004 Implement `DBConnectionManager` in `src/drivers/connections.py` utilizing SQLAlchemy pools to support connections to OLTP and OLAP, including SQLite in-memory for testing.
-- [ ] T005 Create database initialization script `src/drivers/init_db.py` to set up OLTP mock schemas and OLAP target schemas (including auditing and `curacion_geografica` tables) in SQLite.
-- [ ] T006 [P] Implement shared logging and exception handling modules in `src/utils/logging.py`.
-- [ ] T007 [P] Implement payload schema loading and validation utility in `src/utils/contracts.py` using Pydantic or JSON schemas from `specs/001-multiagent-etl/contracts/`.
+- [x] T004 Implement `DBConnectionManager` in `src/drivers/connections.py` utilizing SQLAlchemy pools to support connections to OLTP and OLAP, including SQLite in-memory for testing.
+- [x] T005 Create database initialization script `src/drivers/init_db.py` to set up OLTP mock schemas and OLAP target schemas (including auditing and `curacion_geografica` tables) in SQLite.
+- [x] T006 [P] Implement shared logging and exception handling modules in `src/utils/logging.py`.
+- [x] T007 [P] Implement payload schema loading and validation utility in `src/utils/contracts.py` using Pydantic or JSON schemas from `specs/001-multiagent-etl/contracts/`.
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel.
 
@@ -53,19 +53,19 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T008 [P] [US1] Create unit tests for ExtractorAgent (`tests/unit/test_extractor.py`) testing incremental filter parameters, `decimal.Decimal` mapping, and chunk page throttling (ASSERT-EXT-01, ASSERT-EXT-02, ASSERT-EXT-03).
-- [ ] T009 [P] [US1] Create unit tests for TransformadorAgent (`tests/unit/test_transformador.py`) testing Salta geographic isolation, index normalizations, and Stored Procedure mocks (ASSERT-TRANS-01, ASSERT-TRANS-02, ASSERT-TRANS-03).
-- [ ] T010 [P] [US1] Create unit tests for CargadorAgent (`tests/unit/test_cargador.py`) verifying dimension insertions, surrogate keys mapping, and upsert idempotency logic (ASSERT-LOAD-01, ASSERT-LOAD-02, ASSERT-LOAD-03).
-- [ ] T011 [P] [US1] Create integration tests (`tests/integration/test_pipeline_us1.py`) validating the whole success path of US1 from end-to-end.
+- [x] T008 [P] [US1] Create unit tests for ExtractorAgent (`tests/unit/test_extractor.py`) testing incremental filter parameters, `decimal.Decimal` mapping, and chunk page throttling (ASSERT-EXT-01, ASSERT-EXT-02, ASSERT-EXT-03).
+- [x] T009 [P] [US1] Create unit tests for TransformadorAgent (`tests/unit/test_transformador.py`) testing Salta geographic isolation, index normalizations, and Stored Procedure mocks (ASSERT-TRANS-01, ASSERT-TRANS-02, ASSERT-TRANS-03).
+- [x] T010 [P] [US1] Create unit tests for CargadorAgent (`tests/unit/test_cargador.py`) verifying dimension insertions, surrogate keys mapping, and upsert idempotency logic (ASSERT-LOAD-01, ASSERT-LOAD-02, ASSERT-LOAD-03).
+- [x] T011 [P] [US1] Create integration tests (`tests/integration/test_pipeline_us1.py`) validating the whole success path of US1 from end-to-end.
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Implement the `ExtractorAgent` in `src/agents/extractor/fetcher.py` using query chunking (5,000 records) and 500 ms sleep pauses for throttling.
-- [ ] T013 [P] [US1] Implement `decimal.Decimal` type mapping in `src/agents/extractor/fetcher.py` for all monetales fields.
-- [ ] T014 [P] [US1] Implement the `TransformadorAgent` in `src/agents/transformador/refiner.py` executing normalizations for `vulneraSocial` (`[0.00, 1.00]`).
-- [ ] T015 [US1] Implement territorial filter in `src/agents/transformador/refiner.py` to route non-Salta records to the `curacion_geografica` DataFrame and write Warning logs.
-- [ ] T016 [US1] Implement the `CargadorAgent` in `src/agents/cargador/writer.py` performing upsert loading for `dimBeneficiarios`, `dimProgramas`, `dimGeografia`, `dimTiempo` and `factPolíticasAlimentarias`.
-- [ ] T017 [US1] Verify that Pytest suite runs, tests pass ("Green Phase"), and refactor code for performance optimization.
+- [x] T012 [P] [US1] Implement the `ExtractorAgent` in `src/agents/extractor/fetcher.py` using query chunking (5,000 records) and 500 ms sleep pauses for throttling.
+- [x] T013 [P] [US1] Implement `decimal.Decimal` type mapping in `src/agents/extractor/fetcher.py` for all monetales fields.
+- [x] T014 [P] [US1] Implement the `TransformadorAgent` in `src/agents/transformador/refiner.py` executing normalizations for `vulneraSocial` (`[0.00, 1.00]`).
+- [x] T015 [US1] Implement territorial filter in `src/agents/transformador/refiner.py` to route non-Salta records to the `curacion_geografica` DataFrame and write Warning logs.
+- [x] T016 [US1] Implement the `CargadorAgent` in `src/agents/cargador/writer.py` performing upsert loading for `dimBeneficiarios`, `dimProgramas`, `dimGeografia`, `dimTiempo` and `factPolíticasAlimentarias`.
+- [x] T017 [US1] Verify that Pytest suite runs, tests pass ("Green Phase"), and refactor code for performance optimization.
 
 **Checkpoint**: At this point, User Story 1 (incremental success flow) is fully functional and testable independently.
 
@@ -79,15 +79,15 @@
 
 ### Tests for User Story 2 (TDD Red Phase) ⚠️
 
-- [ ] T018 [P] [US2] Create unit tests for CoordinadorAgent (`tests/unit/test_coordinador.py`) testing batch_id UUID generations, retry policies with backoff, and execution logs (ASSERT-COORD-01, ASSERT-COORD-02, ASSERT-COORD-03).
-- [ ] T019 [P] [US2] Create integration tests (`tests/integration/test_pipeline_us2.py`) that mock connection failures or schema violations during facts load and assert full transactional rollback.
+- [x] T018 [P] [US2] Create unit tests for CoordinadorAgent (`tests/unit/test_coordinador.py`) testing batch_id UUID generations, retry policies with backoff, and execution logs (ASSERT-COORD-01, ASSERT-COORD-02, ASSERT-COORD-03).
+- [x] T019 [P] [US2] Create integration tests (`tests/integration/test_pipeline_us2.py`) that mock connection failures or schema violations during facts load and assert full transactional rollback.
 
 ### Implementation for User Story 2
 
-- [ ] T020 [P] [US2] Implement transaction management in `src/agents/cargador/writer.py` utilizing SQLAlchemy session blocks (`session.begin()`, `session.rollback()`) to ensure complete atomic batch execution.
-- [ ] T021 [P] [US2] Implement the `CoordinadorAgent` in `src/agents/coordinador/orchestrator.py` controlling UUID generation, orchestrating agent handshakes, and running exponential backoff retries.
-- [ ] T022 [US2] Implement audit writes in `src/agents/coordinador/orchestrator.py` to persist execution summaries to the `registro_ejecuciones` table.
-- [ ] T023 [US2] Verify that Pytest integration suite runs, tests pass, and refactor code.
+- [x] T020 [P] [US2] Implement transaction management in `src/agents/cargador/writer.py` utilizing SQLAlchemy session blocks (`session.begin()`, `session.rollback()`) to ensure complete atomic batch execution.
+- [x] T021 [P] [US2] Implement the `CoordinadorAgent` in `src/agents/coordinador/orchestrator.py` controlling UUID generation, orchestrating agent handshakes, and running exponential backoff retries.
+- [x] T022 [US2] Implement audit writes in `src/agents/coordinador/orchestrator.py` to persist execution summaries to the `registro_ejecuciones` table.
+- [x] T023 [US2] Verify that Pytest integration suite runs, tests pass, and refactor code.
 
 **Checkpoint**: At this point, transaction rollbacks and coordinate retries are fully robust and testable.
 
@@ -97,9 +97,9 @@
 
 **Purpose**: Final validations, profiling, documentation, and cleanup.
 
-- [ ] T024 Perform manual verification of the whole flow on a staged SQLite configuration.
-- [ ] T025 Run test suite coverage and ensure overall coverage is >= 90% via `pytest --cov`.
-- [ ] T026 Update developers quickstart documentation in `specs/001-multiagent-etl/quickstart.md` and complete walkthrough.md.
+- [x] T024 Perform manual verification of the whole flow on a staged SQLite configuration.
+- [x] T025 Run test suite coverage and ensure overall coverage is >= 90% via `pytest --cov`.
+- [x] T026 Update developers quickstart documentation in `specs/001-multiagent-etl/quickstart.md` and complete walkthrough.md.
 
 ---
 
