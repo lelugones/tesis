@@ -1,3 +1,4 @@
+import os
 import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -5,20 +6,48 @@ from sqlalchemy.orm import sessionmaker
 logger = logging.getLogger(__name__)
 
 class DBConnectionManager:
-    """Manages connections to OLTP (Secretaria) and OLAP (TAIS_DM) databases."""
+    """Manages pool connections to OLTP (Secretaria) and OLAP (TAIS_DM) databases.
+    Defaults to SQLite in-memory for development and TDD testing environments.
+    """
     
-    def __init__(self, oltp_url: str, olap_url: str):
-        self.oltp_engine = create_engine(oltp_url)
-        self.olap_engine = create_engine(olap_url)
+    def __init__(self, oltp_url: str = None, olap_url: str = None):
+        # Resolve OLTP connection string
+        self.oltp_url = oltp_url or os.environ.get(
+            "OLTP_DB_CONN",
+            "sqlite:///:memory:"
+        )
         
+        # Resolve OLAP connection string
+        self.olap_url = olap_url or os.environ.get(
+            "OLAP_DB_CONN",
+            "sqlite:///:memory:"
+        )
+        
+        # Create SQLAlchemy engines
+        self.oltp_engine = create_engine(
+            self.oltp_url,
+            pool_pre_ping=True,
+            echo=False
+        )
+        self.olap_engine = create_engine(
+            self.olap_url,
+            pool_pre_ping=True,
+            echo=False
+        )
+        
+        # Configure session factories
         self.oltp_session_factory = sessionmaker(bind=self.oltp_engine)
         self.olap_session_factory = sessionmaker(bind=self.olap_engine)
-        logger.info("Database engines and session factories initialized successfully.")
+        
+        logger.info(
+            "Database connection manager initialized. "
+            f"OLTP: {self.oltp_url} | OLAP: {self.olap_url}"
+        )
 
     def get_oltp_session(self):
-        """Returns a session to the transactional database (Secretaria)."""
+        """Returns a new session to the transactional database (Secretaria)."""
         return self.oltp_session_factory()
 
     def get_olap_session(self):
-        """Returns a session to the Data Mart database (TAIS_DM)."""
+        """Returns a new session to the Data Mart database (TAIS_DM)."""
         return self.olap_session_factory()

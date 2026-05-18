@@ -76,21 +76,15 @@ Para ejecutar el pipeline de forma manual en un flujo de pruebas de punta a punt
 ```python
 from src.agents.coordinador.orchestrator import CoordinadorAgent
 from src.drivers.connections import DBConnectionManager
-import datetime
 
-# 1. Instanciar gestor de conexiones
+# 1. Instanciar gestor de conexiones (SQLite en memoria por defecto)
 db_manager = DBConnectionManager()
 
 # 2. Inicializar agente orquestador
 coordinador = CoordinadorAgent(connection_manager=db_manager)
 
-# 3. Disparar ejecución incremental para un rango cerrado
-resultado = coordinador.execute(
-    execution_mode="incremental",
-    target_period_start=datetime.datetime(2026, 5, 1),
-    target_period_end=datetime.datetime(2026, 5, 15)
-)
+# 3. Disparar ejecución del pipeline
+batch_id = coordinador.run(execution_mode="incremental")
 
-print(f"Estado de ejecución: {resultado['status']}")
-print(f"Registros procesados: {resultado['records_loaded']}")
+print(f"ETL Execution finished! Batch ID: {batch_id}")
 ```
