@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "ETL Pipeline": {
+      "source": "claude-office-skills/skills",
+      "sourceType": "github",
+      "skillPath": "etl-pipeline/SKILL.md",
+      "computedHash": "4b34d789f266c799bc08cab14631c4f41938fe3241bb3849d869f5d5199113ab"
+    }
+  }
+}
