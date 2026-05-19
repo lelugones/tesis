@@ -6,24 +6,21 @@ from sqlalchemy.orm import sessionmaker
 logger = logging.getLogger(__name__)
 
 class DBConnectionManager:
-    """Manages pool connections to OLTP (Secretaria) and OLAP (TAIS_DM) databases.
+    """Manages pool connections to OLTP (Secretaria) and OLAP (TAIS_DM) databases for tests and initialization.
     Defaults to SQLite in-memory for development and TDD testing environments.
     """
     
     def __init__(self, oltp_url: str | None = None, olap_url: str | None = None):
-        # Resolve OLTP connection string
         self.oltp_url = oltp_url or os.environ.get(
             "OLTP_DB_CONN",
             "sqlite:///:memory:"
         )
         
-        # Resolve OLAP connection string
         self.olap_url = olap_url or os.environ.get(
             "OLAP_DB_CONN",
             "sqlite:///:memory:"
         )
         
-        # Create SQLAlchemy engines
         self.oltp_engine = create_engine(
             self.oltp_url,
             pool_pre_ping=True,
@@ -35,7 +32,6 @@ class DBConnectionManager:
             echo=False
         )
         
-        # Configure session factories
         self.oltp_session_factory = sessionmaker(bind=self.oltp_engine)
         self.olap_session_factory = sessionmaker(bind=self.olap_engine)
         
